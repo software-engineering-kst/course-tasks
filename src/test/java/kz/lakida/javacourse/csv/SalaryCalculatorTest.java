@@ -75,6 +75,13 @@ class SalaryCalculatorTest {
         assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("2023");
     }
 
+    @Test
+    void returnZeroIfFileNameIsNotProvided() {
+        SalaryCalculator.main(new String[0]);
+
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("0");
+    }
+
     private String saveResourceToTempFile(String resourceName) throws IOException {
         Path tempFilePath = Files.createTempFile("tempcsv", UUID.randomUUID().toString());
         Files.copy(SalaryCalculatorTest.class.getResourceAsStream(resourceName), tempFilePath,
