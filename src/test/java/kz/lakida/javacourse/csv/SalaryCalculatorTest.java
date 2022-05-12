@@ -1,5 +1,10 @@
 package kz.lakida.javacourse.csv;
 
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -8,20 +13,17 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SalaryCalculatorTest {
     private PrintStream systemOut;
-    private final ByteArrayOutputStream newOut = new ByteArrayOutputStream();
+
+    private ByteArrayOutputStream newOut;
 
     @BeforeEach
     void setOutStream() {
         systemOut = System.out;
+        newOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(newOut));
     }
 
@@ -36,7 +38,15 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(filePath));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("72219");
+        assertThat(newOut.toString())
+                .as("Неправильный результат")
+                .isEqualTo(
+                        """
+                                IT:400000
+                                Marketing:100000
+                                Sales:250000
+                                """
+                );
     }
 
     @Test
@@ -45,16 +55,16 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(tempFilePath.toAbsolutePath().toString()));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("0");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Файл пустой");
     }
 
     @Test
-    void calculateSalaryInNonExistingFile() throws IOException {
-        String nonExistingFile = "/tmp/" + UUID.randomUUID().toString();
+    void calculateSalaryInNonExistingFile() {
+        String nonExistingFile = "/tmp/" + UUID.randomUUID();
 
         SalaryCalculator.main(Arrays.array(nonExistingFile));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("0");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Файл не найден");
     }
 
     @Test
@@ -63,7 +73,7 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(filePath));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("0");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Неправильный формат файла");
     }
 
     @Test
@@ -72,18 +82,23 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(filePath));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("2023");
+        assertThat(newOut.toString())
+                .as("Неправильный результат")
+                .isEqualTo("""
+                        Marketing:100000
+                        Sales:150000
+                        """);
     }
 
     @Test
-    void returnZeroIfFileNameIsNotProvided() {
+    void salaryFileNameIsNotProvided() {
         SalaryCalculator.main(new String[0]);
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("0");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Нужно указать имя файла");
     }
 
     private String saveResourceToTempFile(String resourceName) throws IOException {
-        Path tempFilePath = Files.createTempFile("tempcsv", UUID.randomUUID().toString());
+        Path tempFilePath = Files.createTempFile("tempcsv", "txt");
         Files.copy(SalaryCalculatorTest.class.getResourceAsStream(resourceName), tempFilePath,
                 StandardCopyOption.REPLACE_EXISTING);
 

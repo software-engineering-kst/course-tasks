@@ -16,3 +16,7 @@ group = "kz.lakida.javacourse"
 version = "1.0-SNAPSHOT"
 description = "course-tasks"
 java.sourceCompatibility = JavaVersion.VERSION_17
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
