@@ -42,9 +42,9 @@ class SalaryCalculatorTest {
                 .as("Неправильный результат")
                 .isEqualTo(
                         """
-                                IT:400000
-                                Marketing:100000
-                                Sales:250000
+                                IT:400000\r
+                                Marketing:100000\r
+                                Sales:250000\r
                                 """
                 );
     }
@@ -85,8 +85,8 @@ class SalaryCalculatorTest {
         assertThat(newOut.toString())
                 .as("Неправильный результат")
                 .isEqualTo("""
-                        Marketing:100000
-                        Sales:150000
+                        Marketing:100000\r
+                        Sales:150000\r
                         """);
     }
 
