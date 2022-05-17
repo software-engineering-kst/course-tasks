@@ -24,7 +24,7 @@ public class SalaryCalculator {
     public static void main(String[] args) {
 
         String fileName;
-        if (!args[0].isEmpty()) {
+        if (args.length != 0) {
             fileName = args[0];
             List<String[]> listLine = new ArrayList<>();
             List<String> listResult = new ArrayList<>();
