@@ -54,12 +54,12 @@ public class SalaryCalculator {
                     DepartmentSalary currentDepartmentSalary = listLine.get(i);
                     DepartmentSalary nextDepartmentSalary = listLine.get(i + 1);
 
-                    if (!currentDepartmentSalary.departmentName.equals(nextDepartmentSalary.departmentName)) {
+                    if (currentDepartmentSalary.departmentName.equals(nextDepartmentSalary.departmentName)) {
+                        sum = sum + currentDepartmentSalary.salary;
+                    } else {
                         sum = sum + currentDepartmentSalary.salary;
                         listResult.add(currentDepartmentSalary.departmentName + ":" + sum);
                         sum = 0;
-                    } else {
-                        sum = sum + currentDepartmentSalary.salary;
                     }
                     if (i == listLine.size() - 2) {
                         DepartmentSalary lastSalary = listLine.get(listLine.size() - 1);
