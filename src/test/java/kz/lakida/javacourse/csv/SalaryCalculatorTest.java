@@ -40,13 +40,11 @@ class SalaryCalculatorTest {
 
         assertThat(newOut.toString())
                 .as("Неправильный результат")
-                .isEqualTo(
-                        """
-                                IT:400000
-                                Marketing:100000
-                                Sales:250000
-                                """
-                );
+                .isEqualTo("""
+                        IT:400000\r
+                        Marketing:100000\r
+                        Sales:250000\r
+                        """);
     }
 
     @Test
@@ -55,11 +53,11 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(tempFilePath.toAbsolutePath().toString()));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Файл пустой");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Файл пустой\r\n");
     }
 
     @Test
-    void calculateSalaryInNonExistingFile() {
+    void calculateSalaryInNonExistingFile() throws IOException {
         String nonExistingFile = "/tmp/" + UUID.randomUUID();
 
         SalaryCalculator.main(Arrays.array(nonExistingFile));
@@ -73,7 +71,7 @@ class SalaryCalculatorTest {
 
         SalaryCalculator.main(Arrays.array(filePath));
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Неправильный формат файла");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Неправильный формат файла\r\n");
     }
 
     @Test
@@ -85,16 +83,16 @@ class SalaryCalculatorTest {
         assertThat(newOut.toString())
                 .as("Неправильный результат")
                 .isEqualTo("""
-                        Marketing:100000
-                        Sales:150000
+                        Marketing:100000\r
+                        Sales:150000\r
                         """);
     }
 
     @Test
-    void salaryFileNameIsNotProvided() {
+    void salaryFileNameIsNotProvided() throws IOException {
         SalaryCalculator.main(new String[0]);
 
-        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Нужно указать имя файла");
+        assertThat(newOut.toString()).as("Неправильный результат").isEqualTo("Нужно указать имя файла\r\n");
     }
 
     private String saveResourceToTempFile(String resourceName) throws IOException {
