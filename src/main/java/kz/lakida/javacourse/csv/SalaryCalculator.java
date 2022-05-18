@@ -49,9 +49,6 @@ public class SalaryCalculator {
 
     //Метод который проверяет файл пустой или нет
     public static Boolean isFileEmpty(String fileName) throws IOException {
-
-        FileReader fileReader = new FileReader(fileName);
-        BufferedReader csvReader = new BufferedReader(fileReader);
         return Files.size(Paths.get(fileName)) == 0;
     }
 
