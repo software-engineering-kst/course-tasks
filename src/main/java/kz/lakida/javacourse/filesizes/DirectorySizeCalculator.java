@@ -20,7 +20,7 @@ public class DirectorySizeCalculator {
     public static void main(String[] args) throws IOException, PathIsNotAFileException {
         Path path = Paths.get(args[0]);
         int directorySize = calculateDirectorySize(path);
-
+        System.out.println(directorySize);
     }
     public static int calculateDirectorySize(Path path) throws IOException, PathIsNotAFileException {
         try {
