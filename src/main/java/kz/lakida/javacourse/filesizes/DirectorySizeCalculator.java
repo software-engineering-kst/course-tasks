@@ -36,6 +36,7 @@ public class DirectorySizeCalculator {
         }catch (IOException e) {
             throw new IOException("Ошибка файловой системы");
         }
+
         //throw new UnsupportedOperationException("Not implemented");
     }
 }
