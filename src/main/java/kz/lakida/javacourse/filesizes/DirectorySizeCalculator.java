@@ -19,6 +19,22 @@ public class DirectorySizeCalculator {
      */
     public static void main(String[] args) throws IOException, PathIsNotAFileException {
         Path path = Paths.get(args[0]);
+       /* if(path.isAbsolute()){
+            throw new PathIsNotAFileException("Path " + args[0] + " is not a directory");
+        }*/
+        if(args[0].contains(".")){
+            throw new PathIsNotAFileException("Path " + args[0] + " is not a directory");
+        }
+        try {
+            Path testFile1 = Files.createFile(Paths.get(args[0]));
+            throw new PathIsNotAFileException("Path " + args[0] + " is not a directory");
+        } catch (IOException ignored) {
+        }
+
+        if(path.endsWith(".txt")){
+            throw new PathIsNotAFileException("Path " + args[0] + " is not a directory");
+        }
+
         int directorySize = calculateDirectorySize(path);
         System.out.println(directorySize);
     }
