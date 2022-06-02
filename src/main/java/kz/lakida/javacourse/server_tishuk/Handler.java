@@ -1,9 +1,8 @@
 package kz.lakida.javacourse.server_tishuk;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -20,8 +19,10 @@ public class Handler extends Thread{
         put("txt", "text/plain");
         put("", "text/plain");
     }};
+    private static final String NOT_FOUND_MESSAGE = "NOT FOUND";
     private Socket socket;
     private String directory;
+
 
     Handler(Socket socket, String directory){
         this.socket = socket;
@@ -34,9 +35,15 @@ public class Handler extends Thread{
             var url = this.getRequestUrl(input);
             var filePath = Path.of(this.directory, url);
             if (Files.exists(filePath) && Files.isDirectory(filePath)){
-
+                var extension = this.getFileExtension(filePath);
+                var type = CONTENT_TYPES.get(extension);
+                var fileBytes = Files.readAllBytes(filePath);
+                this.sendHeader(output, 200, "OK", type, fileBytes.length);
+                output.write(fileBytes);
             }else {
-                // NOT FOUND
+                var type = CONTENT_TYPES.get("text");
+                this.sendHeader(output, 404, "Not Found", type, NOT_FOUND_MESSAGE.length());
+                output.write(NOT_FOUND_MESSAGE.getBytes());
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -47,5 +54,18 @@ public class Handler extends Thread{
         var reader = new Scanner(input).useDelimiter((System.lineSeparator()));
         var line = reader.next();
         return line.split(" ")[1];
+    }
+
+    private String getFileExtension(Path path){
+        var name = path.getFileName().toString();
+        var extensionStart = name.lastIndexOf(".");
+        return extensionStart == -1 ? "" : name.substring(extensionStart + 1);
+    }
+
+    private void sendHeader(OutputStream output, int statusCode, String statusText, String type, long length){
+          var ps = new PrintStream(output);
+          ps.printf("HTTP/1.1 %s %s%n", statusCode, statusText);
+          ps.printf("Content-Type: %s%n", type);
+          ps.printf("Content-Length: %s%n%n", length);
     }
 }
