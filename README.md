@@ -1,5 +1,7 @@
 # Работа с базой данных
 
+## [Задачи здесь](./tasks/database.md)
+
 ## Подготовка окружения
 
 Мы используем [СУБД PostgreSQL](https://www.postgresql.org/)
