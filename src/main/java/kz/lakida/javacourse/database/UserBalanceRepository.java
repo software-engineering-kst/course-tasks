@@ -20,7 +20,7 @@ public class UserBalanceRepository {
         Map<String, BigDecimal> result = new HashMap<>();
 
         try {
-            String sql = "SELECT * u.name , sum(a.balances) "
+            String sql = "SELECT * u.name , sum(a.balance) "
                     + "FROM users u "
                     + "LEFT JOIN accounts a ON(a.user_id = u.id) "
                     + "GROUP BY u.id";
@@ -39,6 +39,23 @@ public class UserBalanceRepository {
     }
 
     public void initTables() {
-        throw new UnsupportedOperationException();
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "CREATE TABLE users("
+                    +"id UUID PRIMARY KEY,"
+                    +"name VARCHAR(32)"
+                    +");";
+            statement.executeUpdate(sql);
+
+            sql = "CREATE TABLE accounts("
+                    +"id UUID PRIMARY KEY,"
+                    +"user_id NOT NULL REFERENCES users(id),"
+                    +"balance DECIMAL(10,2) NOT NULL DEFAULT 0.0"
+                    +");";
+            statement.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
