@@ -1,6 +1,7 @@
 package kz.lakida.javacourse.database;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +21,8 @@ public class UserBalanceRepository {
         String SQL_SELECT = "select u.name,sum(a.balance) from users u left join accounts a on (a.user_id = u.id) group by u.id";
         ResultSet result = statement.executeQuery(SQL_SELECT);
         while (result.next()){
-           map.put(result.getString("name"), result.getBigDecimal("sum"));
+
+           map.put(result.getString("name"), result.getBigDecimal("sum").setScale(2, RoundingMode.HALF_UP).stripTrailingZeros());
         }
         statement.close();
         return map;
@@ -31,14 +33,9 @@ public class UserBalanceRepository {
         String SQL_CREATE_USER = "create TABLE IF NOT EXISTS users (id uuid primary key, name VARCHAR ( 255 ) NOT NULL);";
         String SQL_CREATE_ACCOUNTS = "create TABLE IF NOT EXISTS accounts (id uuid primary key, user_id UUID not null references users(id), balance decimal(10,2) not null default 0.0);";
 
-        statement.executeUpdate("drop table users CASCADE");
-        statement.executeUpdate("drop table accounts CASCADE");
         statement.executeUpdate(SQL_CREATE_USER);
         statement.executeUpdate(SQL_CREATE_ACCOUNTS);
         
         statement.close();
-
     }
-
-
 }
