@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -48,8 +49,8 @@ public class UserBalanceRepositoryTest {
         var result = repository.findAllBalancesByUser();
 
         assertThat(result).containsExactlyInAnyOrderEntriesOf(Map.of(
-                "Kuanysh", BigDecimal.valueOf(350000.50),
-                "Denis", BigDecimal.valueOf(360000.75)
+                "Kuanysh", BigDecimal.valueOf(350000.50).setScale(2, RoundingMode.HALF_UP),
+                "Denis", BigDecimal.valueOf(360000.75).setScale(2, RoundingMode.HALF_UP)
         ));
     }
 
