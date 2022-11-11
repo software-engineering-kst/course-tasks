@@ -1,9 +1,15 @@
 package kz.lakida.javacourse.rest;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
     private UUID id;
     private String name;
 
