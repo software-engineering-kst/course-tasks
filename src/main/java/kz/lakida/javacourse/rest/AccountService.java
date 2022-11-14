@@ -16,8 +16,8 @@ public class AccountService {
     }
 
     public void createAccount(Account account) {
-        if (account.getAmount().doubleValue() < 0) throw new RuntimeException("Amount is invalid");
-        if (account.getAmount() == null ) account.setAmount(BigDecimal.valueOf(0.00));
+        if (account.getBalance().doubleValue() < 0) throw new RuntimeException("Amount is invalid");
+        if (account.getBalance() == null ) account.setBalance(BigDecimal.valueOf(0.00));
         accountRepository.save(account);
 
     }

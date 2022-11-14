@@ -19,16 +19,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-
     public List<User> findAll() {
         var list = new ArrayList<User>();
         for (User user : userRepository.findAll()) {
             list.add(user);
         }
         return list;
-    }
-
-    public void createAccount() {
-
     }
 }

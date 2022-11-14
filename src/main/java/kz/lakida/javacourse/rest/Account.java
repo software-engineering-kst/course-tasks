@@ -1,28 +1,30 @@
 package kz.lakida.javacourse.rest;
 
-import org.apache.catalina.User;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "account")
+@Table(name = "accounts")
 public class Account {
     @Id
     private UUID id;
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "user_id")
     private User owner;
-    private BigDecimal amount;
+    private BigDecimal balance;
 
     public Account(){}
 
-    public Account(UUID id, User owner, BigDecimal amount) {
+    public Account(UUID id, User owner, BigDecimal balance) {
         this.id = id;
         this.owner = owner;
-        this.amount = amount;
+        this.balance = balance;
     }
 
     public UUID getId() {
@@ -41,12 +43,12 @@ public class Account {
         this.owner = owner;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     @Override
@@ -54,14 +56,14 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(id, account.id) && Objects.equals(owner, account.owner) && Objects.equals(amount, account.amount);
+        return Objects.equals(id, account.id) && Objects.equals(owner, account.owner) && Objects.equals(balance, account.balance);
     }
 
 
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, owner, amount);
+        return Objects.hash(id, owner, balance);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class Account {
         return "Account{" +
                 "id=" + id +
                 ", owner=" + owner +
-                ", amount=" + amount +
+                ", amount=" + balance +
                 '}';
     }
 }

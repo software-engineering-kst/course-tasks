@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -14,7 +14,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<AccountService> getAllAccounts() {
+    public ResponseEntity<AccountResponse> getAllAccounts() {
         return ResponseEntity.ok(new AccountResponse(accountService.findAll()));
     }
 
