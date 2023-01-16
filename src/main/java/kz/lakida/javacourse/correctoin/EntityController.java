@@ -1,17 +1,15 @@
 package kz.lakida.javacourse.correctoin;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
-
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Collections;
 
 class EntityControllerJava {
-    public Connection connection;
+    private final Connection connection;
 
+    //подправлю конструктор добавлю this
     public EntityControllerJava(Connection connection) {
-        connection = connection;
+        this.connection = connection;
     }
 
     public synchronized void saveEntity(Entity entity) throws Exception {
@@ -20,20 +18,34 @@ class EntityControllerJava {
         if (!validate(entity)) {
             throw new RuntimeException("No valid");
         }
-        Statement statement = connection.createStatement();
-        boolean execute = statement.execute("INSERT INTO entity (id, name) values (" + entity.getId() + ", " + entity.getName() + ")");
-        if (!execute) {
-            throw new IllegalStateException("No save");
-        }
+        //этот код не безпасный
+        //boolean execute = statement.execute("INSERT INTO entity (id, name) values (" + entity.getId() + ", " + entity.getName() + ")");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO entity (id, name) values (?, ?)");
+        statement.setInt(1, entity.getId());
+        statement.setString(2, entity.getName());
+        statement.executeUpdate();
 
-        System.out.println("finish");
+        //закрываю потоки
+        try {
+            statement.close();
+            connection.close();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+            System.out.println("finish");
+        }
     }
 
     public void delete(Entity entity) throws Exception {
         System.out.println("start");
 
         Statement statement = connection.createStatement();
-        boolean execute = statement.execute("DELETE FROM entity WHERE id=" + entity.getName());
+        //entity.getName() заменил на entity.getId()
+        boolean execute = statement.execute("DELETE FROM entity WHERE id=" + entity.getId());
         if (!execute) {
             throw new IllegalStateException("No deleted");
         }
@@ -47,10 +59,18 @@ class EntityControllerJava {
     }
 
     public class Entity {
-        private String id;
-        private String name;
+        //сделал поля final
+        //id сделал типа int
+        private final int id;
+        private final String name;
 
-        public String getId() {
+        //добавил конструктор
+        public Entity(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
             return id;
         }
 
