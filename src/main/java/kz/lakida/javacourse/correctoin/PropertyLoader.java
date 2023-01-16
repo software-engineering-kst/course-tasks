@@ -21,6 +21,7 @@ public class PropertyLoader {
             BufferedReader r = new BufferedReader(new FileReader(file));
             String line;
             while ((line = r.readLine()) != null) {
+                //решил использовать токены
                 StringTokenizer stringTokenizer = new StringTokenizer(line,":");
                 String n = stringTokenizer.nextToken();
                 String v = stringTokenizer.nextToken();
@@ -31,11 +32,11 @@ public class PropertyLoader {
             e.printStackTrace();
         }
     }
-
+//    переделал метод getValue
     public String getValue(String key) {
             Property property;
             for(Property property1 : properties){
-                if (property1.getKey().equals(key) && property1.isValid()){
+                if (property1.getKey().equals(key)){
                     return property1.getValue();
                 }
         }
@@ -65,10 +66,6 @@ public class PropertyLoader {
 
         public void setValue(String value) {
             this.value = value;
-        }
-
-        public boolean isValid(){
-            return key !=null && !key.isEmpty() && value != null && !value.isEmpty();
         }
 
         @Override
