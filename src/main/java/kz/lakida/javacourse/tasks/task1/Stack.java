@@ -1,11 +1,11 @@
 package kz.lakida.javacourse.tasks.task1;
 
-import kz.lakida.javacourse.tasks.task1.car.Car;
+import kz.lakida.javacourse.tasks.task1.car.SomeCar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stack<T extends Car> {
+public class Stack<T extends SomeCar> {
 
     private final List<T> arrayList;
 
