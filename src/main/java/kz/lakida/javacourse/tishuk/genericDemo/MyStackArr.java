@@ -5,17 +5,14 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class MyStackArr<E>  {
-    private final Object[] elementData;
+    private Object[] elementData;
     private int top;
-    private  int capacity;
-    protected transient int modCount = 0;
 
-    // Конструктор для инициализации stack
-    MyStackArr(int initialCapacity)
-    {
+    public MyStackArr(int initialCapacity) {
+        if (initialCapacity < 0)
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
         elementData = new Object[initialCapacity];
-        capacity = initialCapacity;
-        top = -1;
+        top = 0;
     }
 
     public MyStackArr(Collection<? extends E> c) {
@@ -27,65 +24,65 @@ public class MyStackArr<E>  {
             elementData = Arrays.copyOf(a, top, Object[].class);
         }
     }
-    // Вспомогательная функция для добавления элемента `x` в stack
-    public E push (E item) // public void E push (E item) - ругается
-    {
-        if (isFull())
-        {
-            System.out.println("Overflow\nProgram Terminated\n");
-            System.exit(-1);
-        }
 
+    public synchronized void push (E item) throws Exception {
+        if (isFull()) {
+            elementData = grow();
+            addItem(item);
+        } else {
+            addItem(item);
+        }
+    }
+
+    private void addItem(E item) {
         System.out.println("Inserting " + item);
-        elementData[++top] = item;
-        return item;
+        elementData[top] = item;
+        top++;
     }
 
-    // Вспомогательная функция для извлечения верхнего элемента из stack
-    public synchronized E pop()
-    {
-        //E       obj;
-        //int     len = size();
-        //obj = peek();
-        //removeElementAt(len - 1);
-        // проверка на опустошение stack
-        if (isEmpty())
-        {
-            System.out.println("Underflow\nProgram Terminated");
-            System.exit(-1);
-        }
-        System.out.println("Removing " + peek());
-        // уменьшаем размер stack на 1 и (необязательно) возвращаем извлеченный элемент
-        return (E) elementData[top--];
+    private Object[] grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity * 2;
+        return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
-    // Вспомогательная функция для возврата верхнего элемента stack
-    public E peek()
-    {
-        if (!isEmpty()) {
-            return (E) elementData[top];
-        }
-        else {
-            return (E) new RuntimeException("Stack is empty");
-        }
+    public synchronized E pop() throws EmptyStackException {
+        E obj;
+        int len = size();
+        obj = peek();
+        removeElementAt(len - 1);
+        return obj;
     }
 
-    // Вспомогательная функция для возврата размера stack
+    public synchronized E peek() throws EmptyStackException {
+        int len = size();
+        if (len == 0)
+            throw new EmptyStackException();
+        return (E) elementData[len - 1];
+    }
+
     public int size() {
-        return top + 1;
+        return top;
     }
 
-    // Вспомогательная функция для проверки, пуст stack или нет
     public boolean isEmpty() {
-        return top == -1;               // или return size() == 0;
+        return top == 0;
     }
 
-    // Вспомогательная функция для проверки, заполнен ли stack или нет
-    public boolean isFull() {
-        return top == capacity - 1;     // или return size() == capacity;
+    private boolean isFull() {
+        return this.top == elementData.length;     // или return size() == capacity;
     }
 
-    public synchronized void removeElementAt(int index) {
+    @Override
+    public String toString() {
+        return "MyStackArr{" +
+                "elementData=" + Arrays.toString(elementData) +
+                ", top=" + top +
+                ", capacity=" + elementData.length +
+                '}';
+    }
+
+    private void removeElementAt(int index) {
         if (index >= top) {
             throw new ArrayIndexOutOfBoundsException(index + " >= " +
                     top);
@@ -94,37 +91,35 @@ public class MyStackArr<E>  {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         int j = top - index - 1;
+        // Тоха, оставилкомент, чтоб тебе показать блок кода из библиотеки Vector. Ниже часть безсмысленная. Она ничего не делает.
         if (j > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, j);
         }
-        modCount++;
         top--;
-        elementData[top] = null; /* to let gc do its work */
+        elementData[top] = null;
     }
 
-    public static void main (String[] args)
-    {
-        MyStackArr stack = new MyStackArr(3);
+    public static void main (String[] args) throws Exception {
+        MyStackArr stack = new MyStackArr(1);
 
-        stack.push("Denis");      // вставляем 1 в stack
-        stack.push("Anton");      // вставляем 2 в stack
+        stack.push("Denis");
+        stack.push("Anton");
+        stack.push(123);
 
-        stack.pop();        // удаление верхнего элемента (2)
-        stack.pop();        // удаление верхнего элемента (1)
+        System.out.println(stack);
 
-        stack.push(3);      // вставляем 3 в stack
+        stack.pop();
+        stack.pop();
 
         System.out.println("The top element is " + stack.peek());
         System.out.println("The stack size is " + stack.size());
 
-        stack.pop();        // удаление верхнего элемента (3)
-
-        // проверяем, пуст ли stack
         if (stack.isEmpty()) {
             System.out.println("The stack is empty");
         }
         else {
             System.out.println("The stack is not empty");
         }
-    }
+             System.out.println(stack);
+        }
 }
