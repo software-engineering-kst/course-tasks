@@ -1,5 +1,7 @@
 package kz.lakida.javacourse.generics.task;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 public class GenericStack<T> {
@@ -19,6 +21,10 @@ public class GenericStack<T> {
     public synchronized void push(T element) {
         head = new Node(element, head);
         size++;
+    }
+
+    public synchronized void pushAll(Collection<? extends T> elements) {
+        elements.forEach(this::push);
     }
 
     public synchronized T peek() {
@@ -41,23 +47,21 @@ public class GenericStack<T> {
     }
 
     public static void main(String[] args) {
-        var stack = new GenericStack<String>();
+        var stack = new GenericStack<A>();
 
         System.out.println(stack.peek());
 
-        stack.push("Denis");
-        stack.push("Anton");
-        stack.push("Kuanysh");
+        var listOfBs = new ArrayList<B>();
+        listOfBs.add(new B());
+        listOfBs.add(new B());
 
-        System.out.println(stack.size());
-
-        System.out.println(stack.pop());
-        System.out.println(stack.pop());
-        stack.push("Vasya");
+        stack.pushAll(listOfBs);
 
         System.out.println(stack.pop());
         System.out.println(stack.pop());
         System.out.println(stack.pop());
-        System.out.println(stack.size());
     }
+
+    static class A {}
+    static class B extends A {}
 }
