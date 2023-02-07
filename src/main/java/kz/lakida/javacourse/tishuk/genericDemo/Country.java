@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Country {
+public class Country implements Comparable<Country> {
     private int area;
     private String name;
     private int crowded;
@@ -48,6 +48,10 @@ public class Country {
         this.crowded = crowded;
     }
 
+    @Override
+    public int compareTo(Country o) {
+        return this.name.compareTo(o.name);
+    }
 
     public static class CountryComparator implements Comparator<Country>{
         @Override

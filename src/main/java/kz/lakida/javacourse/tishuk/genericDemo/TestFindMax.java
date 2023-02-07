@@ -13,9 +13,8 @@ public class TestFindMax {
         countryList.add(country1);
         countryList.add(country2);
         countryList.add(country3);
-        Country.CountryComparator comparator = new Country.CountryComparator();
 
-        Object ob = FindMax.findMax(countryList, comparator);
+        Country ob = FindMax.findMax(countryList);
         System.out.println(ob);
     }
 }
